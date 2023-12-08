@@ -45,11 +45,10 @@ namespace Template.Api
             var app_id = AppSetting.GetSetting("AppID");
             //services.AddSetting(Configuration).Remote(option =>
             //{
-            //    var env = AppSetting.GetEnvironment();
             //    option.PullTicks = 60;
             //    option.DowLoad = (context) =>
-            //    {                    
-            //        //从远端获取配置                    
+            //    {
+            //        //从配置中心加载配置                   
             //        return "";
             //    };
             //});
