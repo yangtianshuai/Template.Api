@@ -33,7 +33,7 @@ namespace Template.Api.Controllers
         public async Task<IActionResult> Test2()
         {
             var result = new ResponseResult();
-            var http = await OpenApi.Get("id").GetAsync("");
+            //var http = await OpenApi.Get("id").GetAsync();
             return result.ToJson();
         }
 
