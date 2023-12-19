@@ -1,4 +1,5 @@
 ﻿using Api.Config;
+using Api.Config.Open;
 using Api.Config.Sso;
 using SSO.Client;
 using System.Threading.Tasks;
@@ -21,7 +22,9 @@ namespace Template.Api
                 var session = new Session
                 {
                     Token = cookie.ID
-                };                   
+                };
+
+                //await OpenApi.Get("服务ID").GetAsync();
                 await _session.SetSessionAsync(session);
             }
         }
