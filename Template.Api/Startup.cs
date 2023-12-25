@@ -57,7 +57,7 @@ namespace Template.Api
             services.AddDbContext<SampleContext>(options =>
             {
                 //options.EnableSensitiveDataLogging(true); 开启全部SQL日志
-                options.UseSqlServer(AppSetting.GetSetting("ConnectionStrings:Connection"));
+                options.UseSqlServer(AppSetting.GetSetting("DatabaseConnections:Connection"));
             });
             
             //设置DI
@@ -73,7 +73,7 @@ namespace Template.Api
             services.AddDistributedRedisCache(option =>
             {
                 //redis 连接字符串
-                option.Configuration = AppSetting.GetSetting("ConnectionStrings:Redis");
+                option.Configuration = AppSetting.GetSetting("RedisConnections:Connection");
                 //redis 实例名
                 option.InstanceName = $"Template.Api-{env}-";
             }).AddRedisCache();
