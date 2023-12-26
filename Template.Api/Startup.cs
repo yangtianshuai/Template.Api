@@ -43,11 +43,13 @@ namespace Template.Api
             services.AddSetting(Configuration, env);
 
             var app_id = AppSetting.GetSetting("AppID");
+
             //services.AddSetting(Configuration).Remote(option =>
-            //{
+            //{                
             //    option.PullTicks = 60;
             //    option.DowLoad = (context) =>
             //    {
+            //        //app_id、secret、env、code
             //        //从配置中心加载配置                   
             //        return "";
             //    };
@@ -98,7 +100,7 @@ namespace Template.Api
                 options.AppID = app_id;//当前应用ID
                 //用于IP映射规则转换（特别是针对内外网问题）
                 options.AddIpMappings(AppSetting.GetSetting<IPMapping[]>("Sso:Mappings"));
-            }).UseCas();
+            }).UseOAuth2();
 
             //设置HTTP请求
             services.SetHttp(options =>
@@ -156,12 +158,12 @@ namespace Template.Api
                 //设置app_id
                 options.SetAppID(app_id);
 
-                options.DownLoad = (_options) => {                                              
+                options.DownLoad = async (_options) => {                                              
                     var url = string.Format(AppSetting.GetSetting("Open:Authorize")
                         , OpenOptions.AppID
                         , HttpUtility.UrlEncode(AppSetting.GetSetting("Open:RedirectUri")));
                     //http://ip:port/open/authorize?app_id={0}&redirect_uri={1}&type=uri
-                    HttpHelper.GetAsync(url);
+                    await HttpHelper.GetAsync(url);
                 };
 
                 //本地设置

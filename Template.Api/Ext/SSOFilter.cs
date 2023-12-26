@@ -1,6 +1,6 @@
 ﻿using Api.Config;
-using Api.Config.Open;
 using Api.Config.Sso;
+using Microsoft.AspNetCore.Http;
 using SSO.Client;
 using System.Threading.Tasks;
 
@@ -15,17 +15,25 @@ namespace Template.Api
             _session = session;
         }
         public override async Task ValidateComplate(SsoCookie cookie)
-        {           
+        {
+            var session = await _session.GetSessionAsync<Session>(cookie.ID);
             //加入Session
-            if (!await _session.ContainAsync(cookie.ID))
+            if (session == null)
             {
-                var session = new Session
+                session = new Session
                 {
                     Token = cookie.ID
                 };
+                // await OpenApi.Get("服务ID").GetAsync();
 
-                //await OpenApi.Get("服务ID").GetAsync();
                 await _session.SetSessionAsync(session);
+            }
+            else
+            {
+                if (!_session.ContainToken(session))
+                {
+                    _session.SetToken(session);
+                }
             }
         }
         public override async Task LogoutComplate(SsoCookie cookie)
@@ -35,6 +43,11 @@ namespace Template.Api
             {                
                 await _session.ClearSessionAsync(cookie.ID);
             }
+        }
+
+        public override string GetCookieID(HttpContext context)
+        {
+            return context.GetToken();
         }
     }
 }
