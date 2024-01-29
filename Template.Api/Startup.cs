@@ -1,5 +1,6 @@
 ﻿using Api.Config;
 using Api.Config.Cache;
+using Api.Config.DI;
 using Api.Config.Net;
 using Api.Config.Proxy;
 using Api.Config.Setting;
@@ -61,15 +62,18 @@ namespace Template.Api
                 //options.EnableSensitiveDataLogging(true); 开启全部SQL日志
                 options.UseSqlServer(AppSetting.GetSetting("DatabaseConnections:Connection"));
             });
-            
+
             //设置DI
             services.SetDI(options =>
             {
-                options.Add(typeof(DotNetCore.Repository.IRepository));
+                options.Add(
+                    typeof(DotNetCore.Repository.IRepository),//仓储层
+                    typeof(IocService)//服务层
+                );
             });
 
             //内存缓存
-            //services.AddMemoryCache().AddCache();
+            //services.AddCache();
 
             //Redis缓存
             services.AddDistributedRedisCache(option =>
@@ -85,6 +89,7 @@ namespace Template.Api
 
             services.AddMemorySession(options =>
             {
+                options.TokenKey = "Template_Token";
                 //开启Redis缓存Session
                 options.Service = typeof(RedisSessionService);
             });
